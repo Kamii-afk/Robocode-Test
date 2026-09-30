@@ -1,36 +1,42 @@
 /**
- * This Model can move while shoot
- * He moves in a zigzag pattern
- * He inverte the current direction based on booleans conditions
+ * This Model Can move long distances in a zigzag patternt
+ * While Shoot the enemies
  */
 
 package test;
 
-import robocode.*;/**
- * Cosmo by
+import robocode.*;
+/**
+ * Neptune by
  * @author Davyd Miller
  */
-public class cosmo extends AdvancedRobot{
+import java.awt.*;
 
+public class Neptune extends AdvancedRobot{
+    
     boolean movingForward;
 
     public void run() {
+        //Colors
+        setBodyColor(new Color(0, 255, 0));
+        setGunColor(new Color(0, 255, 0));
+        setRadarColor(new Color(0, 255, 0));
+        setBulletColor(new Color(0, 255, 0));
+        setScanColor(new Color (0, 255, 00));
+
+        //Movement
         while(true) {
-            setAhead(4000);
+            setAhead(40000);
             movingForward = true;
-            setTurnLeft(90);
-            waitFor(new TurnCompleteCondition(this));
             setTurnRight(90);
+            setTurnGunRight(360);
             waitFor(new TurnCompleteCondition(this));
+            setTurnGunLeft(360);
             setTurnLeft(180);
             waitFor(new TurnCompleteCondition(this));
             setTurnRight(180);
             waitFor(new TurnCompleteCondition(this));
         }
-    }
-
-    public void onScannedRobot(ScannedRobotEvent e) {
-        fire(1);
     }
 
     public void onHitWall(HitWallEvent e) {
@@ -49,7 +55,17 @@ public class cosmo extends AdvancedRobot{
 
     public void onHitRobot(HitRobotEvent e) {
         if(e.isMyFault()) {
-            setBack(100);
+            reverse();
+        } else {
+            setTurnGunRight(360);
         }
+    }
+
+    public void onScannedRobot(ScannedRobotEvent e) {
+        fire(1);
+    }
+
+    public void onHitByBullet(HitByBulletEvent e) {
+        reverse();
     }
 }
