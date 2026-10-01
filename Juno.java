@@ -16,6 +16,7 @@ public class Juno extends AdvancedRobot{
     double x, y, heading;
     double fieldWidth, fieldHeight;
     boolean stuck;
+    boolean nowReverse = true;
 
     int[] ang = {
         225,
@@ -44,30 +45,34 @@ public class Juno extends AdvancedRobot{
 
         //Movement
         while(true) {
-            setAhead(1000);
-            movingForward = true;
+            if(nowReverse) {
+                setAhead(50000);
+                movingForward = true;
+            }else {
+                setBack(50000);
+                movingForward = false;
+            }
             setTurnRight(90);
             setTurnGunLeft(360);
             waitFor(new TurnCompleteCondition(this));
-            setBack(1000);
             setTurnLeft(180);
             setTurnGunRight(360);
             waitFor(new TurnCompleteCondition(this));
-            setAhead(1000);
             setTurnRight(180);
             setTurnGunLeft(360);
             waitFor(new TurnCompleteCondition(this));
-            setBack(1000);
             setTurnLeft(90);
             waitFor(new TurnCompleteCondition(this));
         }
     }
 
     public void onScannedRobot(ScannedRobotEvent e) {
+        nowReverse = !nowReverse;
         fire(1);
     }
 
     public void onHitRobot(HitRobotEvent e) {
+        nowReverse = !nowReverse;
         if(e.isMyFault() && movingForward == true) {
             setBack(100);
             movingForward = false;
@@ -124,6 +129,7 @@ public class Juno extends AdvancedRobot{
     }
 
     public void onHitWall(HitWallEvent e) {
+        nowReverse = !nowReverse;
         if(getPosition() == headFrom.NE) {
             if(getDirection() == headFrom.NE) {
                 back(200);
