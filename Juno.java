@@ -18,10 +18,10 @@ public class Juno extends AdvancedRobot{
     boolean stuck;
 
     int[] ang = {
-        45,
-        135,
         225,
-        315
+        315,
+        45,
+        135
     };
 
     enum headFrom {
@@ -44,14 +44,21 @@ public class Juno extends AdvancedRobot{
 
         //Movement
         while(true) {
-            setAhead(400);
-            setTurnRight(145);
+            setAhead(1000);
+            movingForward = true;
+            setTurnRight(90);
+            setTurnGunLeft(360);
             waitFor(new TurnCompleteCondition(this));
-            setBack(400);
-            setTurnLeft(200);
+            setBack(1000);
+            setTurnLeft(180);
+            setTurnGunRight(360);
             waitFor(new TurnCompleteCondition(this));
-            setAhead(200);
+            setAhead(1000);
             setTurnRight(180);
+            setTurnGunLeft(360);
+            waitFor(new TurnCompleteCondition(this));
+            setBack(1000);
+            setTurnLeft(90);
             waitFor(new TurnCompleteCondition(this));
         }
     }
@@ -103,13 +110,24 @@ public class Juno extends AdvancedRobot{
         }
     }
 
-    public void onHitWall(HitWallEvent e) {
+    public double calcTurn(double target) {
         this.heading = getHeading();
-        
+        double turn = target - heading;
+
+        if(turn > 180) {
+            turn -= 360;
+        }else if(turn < -180) {
+            turn += 360;
+        }
+
+        return turn;
+    }
+
+    public void onHitWall(HitWallEvent e) {
         if(getPosition() == headFrom.NE) {
             if(getDirection() == headFrom.NE) {
-                setBack(50);
-                setTurnRight(heading - ang[0]);
+                back(200);
+                setTurnRight(calcTurn(ang[0]));
                 movingForward = false;
             } else {
                 setTurnLeft(90);
@@ -118,8 +136,8 @@ public class Juno extends AdvancedRobot{
             }
         }else if(getPosition() == headFrom.SE) {
             if(getDirection() == headFrom.SE) {
-                setBack(50);
-                setTurnLeft(heading - ang[1]);
+                back(200);
+                setTurnRight(calcTurn(ang[1]));
                 movingForward = false;
             }else {
                 setTurnLeft(90);
@@ -128,8 +146,8 @@ public class Juno extends AdvancedRobot{
             }
         }else if(getPosition() == headFrom.SW) {
             if(getDirection() == headFrom.SW) {
-                setBack(50);
-                setTurnRight(heading - ang[2]);
+                back(200);
+                setTurnLeft(calcTurn(ang[2]));
                 movingForward = false;
             }else {
                 setTurnLeft(90);
@@ -138,8 +156,8 @@ public class Juno extends AdvancedRobot{
             }
         }else {
             if(getDirection() == headFrom.NW) {
-                setBack(50);
-                setTurnRight(heading - ang[3]);
+                back(200);
+                setTurnLeft(calcTurn(ang[3]));
                 movingForward = false;
             }else {
                 setTurnLeft(90);
