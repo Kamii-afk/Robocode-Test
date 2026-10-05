@@ -9,12 +9,15 @@ import robocode.*;
 /**
  * Neptune by
  * @author Davyd Miller
+ * @author Hisadora Faleiro
  */
 import java.awt.*;
+import static robocode.util.Utils.normalRelativeAngleDegrees;
 
 public class Neptune extends AdvancedRobot{
     
-    boolean movingForward;
+    boolean isFacingForward;
+    double searchRadius;
 
     public void run() {
         //Colors
@@ -26,8 +29,8 @@ public class Neptune extends AdvancedRobot{
 
         //Movement
         while(true) {
-            setAhead(40000);
-            movingForward = true;
+            setAhead(50000);
+            isFacingForward = true;
             setTurnRight(90);
             setTurnGunRight(360);
             waitFor(new TurnCompleteCondition(this));
@@ -44,12 +47,12 @@ public class Neptune extends AdvancedRobot{
     }
 
     public void reverse() {
-        if(movingForward) {
+        if(isFacingForward) {
             setBack(100);
-            movingForward = false;
+            isFacingForward = false;
         } else {
             setAhead(100);
-            movingForward = true;
+            isFacingForward = true;
         }
     }
 
@@ -62,7 +65,16 @@ public class Neptune extends AdvancedRobot{
     }
 
     public void onScannedRobot(ScannedRobotEvent e) {
-        fire(1);
+        //New Aim system
+        searchRadius = normalRelativeAngleDegrees(e.getBearing() + (getHeading() - getRadarHeading()));
+
+        if(e.getDistance() > 100) {
+            setTurnGunRight(searchRadius);
+            return;
+        }
+        setTurnGunRight(e.getBearing());
+        setTurnRight(e.getDistance() - 100);
+        fire(2);
     }
 
     public void onHitByBullet(HitByBulletEvent e) {

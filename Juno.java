@@ -32,7 +32,7 @@ public class Juno extends AdvancedRobot{
         SW
     };
     
-    boolean movingForward;
+    boolean isFacingForward;
 
     public void run() {
 
@@ -47,10 +47,10 @@ public class Juno extends AdvancedRobot{
         while(true) {
             if(nowReverse) {
                 setAhead(50000);
-                movingForward = true;
+                isFacingForward = true;
             }else {
                 setBack(50000);
-                movingForward = false;
+                isFacingForward = false;
             }
             setTurnRight(90);
             setTurnGunLeft(360);
@@ -63,22 +63,21 @@ public class Juno extends AdvancedRobot{
             waitFor(new TurnCompleteCondition(this));
             setTurnLeft(90);
             waitFor(new TurnCompleteCondition(this));
+            nowReverse = !nowReverse;
         }
     }
 
     public void onScannedRobot(ScannedRobotEvent e) {
-        nowReverse = !nowReverse;
         fire(1);
     }
 
     public void onHitRobot(HitRobotEvent e) {
-        nowReverse = !nowReverse;
-        if(e.isMyFault() && movingForward == true) {
+        if(e.isMyFault() && isFacingForward == true) {
             setBack(100);
-            movingForward = false;
-        }else if(e.isMyFault() && movingForward == false) {
+            isFacingForward = false;
+        }else if(e.isMyFault() && isFacingForward == false) {
             setAhead(100);
-            movingForward = true;
+            isFacingForward = true;
         }
     }
     
@@ -129,46 +128,45 @@ public class Juno extends AdvancedRobot{
     }
 
     public void onHitWall(HitWallEvent e) {
-        nowReverse = !nowReverse;
         if(getPosition() == headFrom.NE) {
             if(getDirection() == headFrom.NE) {
                 back(200);
                 setTurnRight(calcTurn(ang[0]));
-                movingForward = false;
+                isFacingForward = false;
             } else {
                 setTurnLeft(90);
                 setAhead(100);
-                movingForward = true;
+                isFacingForward = true;
             }
         }else if(getPosition() == headFrom.SE) {
             if(getDirection() == headFrom.SE) {
                 back(200);
                 setTurnRight(calcTurn(ang[1]));
-                movingForward = false;
+                isFacingForward = false;
             }else {
                 setTurnLeft(90);
                 setAhead(100);
-                movingForward = true;
+                isFacingForward = true;
             }
         }else if(getPosition() == headFrom.SW) {
             if(getDirection() == headFrom.SW) {
                 back(200);
                 setTurnLeft(calcTurn(ang[2]));
-                movingForward = false;
+                isFacingForward = false;
             }else {
                 setTurnLeft(90);
                 setAhead(100);
-                movingForward = true;
+                isFacingForward = true;
             }
         }else {
             if(getDirection() == headFrom.NW) {
                 back(200);
                 setTurnLeft(calcTurn(ang[3]));
-                movingForward = false;
+                isFacingForward = false;
             }else {
                 setTurnLeft(90);
                 setAhead(100);
-                movingForward = true;    
+                isFacingForward = true;    
             }
         }
     }
