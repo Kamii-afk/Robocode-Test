@@ -64,7 +64,7 @@ public class Juno extends AdvancedRobot{
     }
 
     public void onScannedRobot(ScannedRobotEvent e) {
-        fire(1);
+        setFire(1);
     }
 
     public void onHitRobot(HitRobotEvent e) {
