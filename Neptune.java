@@ -70,11 +70,12 @@ public class Neptune extends AdvancedRobot{
 
         if(e.getDistance() > 100) {
             setTurnGunRight(searchRadius);
+            setFire(1);
             return;
         }
         setTurnGunRight(e.getBearing());
         setTurnRight(e.getDistance() - 100);
-        fire(2);
+        setFire(2);
     }
 
     public void onHitByBullet(HitByBulletEvent e) {
